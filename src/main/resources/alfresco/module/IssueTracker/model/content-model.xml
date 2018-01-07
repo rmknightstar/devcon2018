@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model name="itrack:contentModel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+
+    <description>Content Model for Issue Tracker</description>
+    <author>Richard McKnight</author>
+    <version>1.0</version>
+
+    <imports>
+        <!-- Import Alfresco Dictionary Definitions -->
+        <import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d"/>
+        <!-- Import Alfresco Content Domain Model Definitions -->
+        <import uri="http://www.alfresco.org/model/content/1.0" prefix="cm"/>
+        <!-- Import Alfresco System Model Definitions -->
+        <import uri="http://www.alfresco.org/model/system/1.0" prefix="sys"/>
+    </imports>
+
+    <!-- Custom namespace for the ACME company -->
+    <namespaces>
+        <namespace uri="http://www.alfresco.com/model/issueTracker/1.0" prefix="itrack"/>
+    </namespaces>
+
+    <constraints>
+        <constraint name="itrack:caseStatusConstraint" type="LIST">
+            <parameter name="allowedValues">
+                <list>
+                    <value>Open</value>
+                    <value>Suspended</value>
+                    <value>Closed</value>
+                </list>
+            </parameter>
+        </constraint>
+    </constraints>
+
+    <!-- ===============================================================================================================
+        Constraints, Types, and Aspects go here...
+        -->
+
+    <types>
+        <type name="itrack:issueContainer">
+            <title>Issues Container</title>
+            <parent>cm:folder</parent>
+            <properties>
+            </properties>
+            <mandatory-aspects>
+            </mandatory-aspects>
+        </type>
+        <type name="itrack:case">
+            <title>Case</title>
+            <parent>itrack:issueContainer</parent>
+            <properties>
+	            <property name="itrack:caseStatus">
+	               <title>Case Status</title>
+	               <type>d:text</type>
+	               <index enabled="true">
+	                  <tokenised>false</tokenised>
+	               </index>
+	            </property>                
+            </properties>
+            <mandatory-aspects>
+            	<aspect>itrack:projectInfo</aspect>
+            	<aspect>itrack:caseInfo</aspect>
+            </mandatory-aspects>
+        </type>
+        <type name="itrack:project">
+            <title>Project</title>
+            <parent>itrack:issueContainer</parent>
+            <properties>
+	            <property name="itrack:projectName">
+	               <title>Project Name</title>
+	               <type>d:text</type>
+	               <index enabled="true">
+	                  <tokenised>both</tokenised>
+	               </index>
+	            </property>                
+            </properties>
+            <mandatory-aspects>
+            	<aspect>itrack:projectInfo</aspect>
+            </mandatory-aspects>
+        </type>
+        <type name="itrack:caseComment">
+            <title>Case</title>
+            <parent>cm:content</parent>
+            <properties>
+            </properties>
+            <mandatory-aspects>
+            	<aspect>itrack:projectInfo</aspect>
+            	<aspect>itrack:caseInfo</aspect>
+            	<aspect>itrack:caseObject</aspect>
+            </mandatory-aspects>
+        </type>
+        <type name="itrack:caseAttachment">
+            <title>Case</title>
+            <parent>cm:content</parent>
+            <properties>
+	            <property name="itrack:filename">
+	               <title>Original Filename</title>
+	               <type>d:mltext</type>
+	            </property>                
+            </properties>
+            <mandatory-aspects>
+            	<aspect>itrack:projectInfo</aspect>
+            	<aspect>itrack:caseInfo</aspect>
+            	<aspect>itrack:caseObject</aspect>
+            </mandatory-aspects>
+        </type>
+        <type name="itrack:caseReference">
+            <title>Case</title>
+            <parent>cm:cmobject</parent>
+            <properties>
+	            <property name="itrack:linkUrl">
+	               <title>Link URL</title>
+	               <type>d:text</type>
+	               <mandatory>true</mandatory>
+	            </property>                
+            </properties>
+            <mandatory-aspects>
+            	<aspect>itrack:projectInfo</aspect>
+            	<aspect>itrack:caseInfo</aspect>
+            	<aspect>itrack:caseObject</aspect>
+            </mandatory-aspects>
+        </type>
+    </types>
+
+    <aspects>
+        <aspect name="itrack:caseObject">
+            <title>Case Object Information</title>
+            <properties>
+	            <property name="itrack:subject">
+	               <title>Subject</title>
+	               <type>d:mltext</type>
+	               <mandatory>true</mandatory>
+	               <index enabled="true">
+	                  <tokenised>both</tokenised>
+	               </index>
+	            </property>
+            </properties>
+        </aspect>
+        <aspect name="itrack:projectInfo">
+            <title>Project Information</title>
+            <properties>
+	            <property name="itrack:projectId">
+	               <title>Subject</title>
+	               <type>d:text</type>
+	               <mandatory>true</mandatory>
+	               <index enabled="true">
+	                  <tokenised>false</tokenised>
+	               </index>
+	            </property>
+            </properties>
+        </aspect>
+        <aspect name="itrack:caseInfo">
+            <title>Case Information</title>
+            <properties>
+	            <property name="itrack:caseId">
+	               <title>Case Id</title>
+	               <type>d:text</type>
+	               <mandatory>true</mandatory>
+	               <index enabled="true">
+	                  <tokenised>false</tokenised>
+	               </index>
+	            </property>
+            </properties>
+        </aspect>
+    </aspects>
+
+</model>

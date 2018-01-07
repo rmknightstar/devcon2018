@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+	Licensed to the Apache Software Foundation (ASF) under one or more
+	contributor license agreements.  See the NOTICE file distributed with
+	this work for additional information regarding copyright ownership.
+	The ASF licenses this file to You under the Apache License, Version 2.0
+	(the "License"); you may not use this file except in compliance with
+	the License.  You may obtain a copy of the License at
+	
+	http://www.apache.org/licenses/LICENSE-2.0
+	
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- A simple class that is initialized by Spring -->
+    <bean id="org.alfresco.devcon.Demo" class="org.alfresco.devcon.platformsample.Demo" init-method="init" />
+
+    <!-- A simple module component that will be executed once.
+         Note. this module component will only be executed once, and then there will be an entry for it in the Repo DB.
+         So doing for example $ mvn clean install alfresco:run twice will only execute this component the first time.
+         You need to remove /alf_data_dev for it to be executed again. -->
+    <bean id="org.alfresco.devcon.DemoComponent" class="org.alfresco.devcon.platformsample.DemoComponent" parent="module.baseComponent" >
+        <property name="moduleId" value="IssueTracker" />  <!-- See module.properties -->
+        <property name="name" value="DemoComponent" />
+        <property name="description" value="A demonstration component" />
+        <property name="sinceVersion" value="1.0" />
+        <property name="appliesFromVersion" value="0.99" /> <!-- 1.0 would not work here when using SNAPSHOT version in project  -->
+        <property name="nodeService" ref="NodeService" />
+        <property name="nodeLocatorService" ref="nodeLocatorService" />
+    </bean>
+
+       <bean id="issueTracker.folderHierarchyHelper" class="org.alfresco.devcon.util.folder_hierarchy.impl.FolderHierarchyHelperImpl">
+        <property name="serviceRegistry">
+            <ref bean="ServiceRegistry"/>
+        </property>
+    </bean>
+    
+   <bean id="issueTracker.uniquePropertyManager" class="org.alfresco.devcon.util.unique_property.UniquePropertyManager">
+      <property name="serviceRegistry">
+         <ref bean="ServiceRegistry"/>
+      </property>
+   </bean>
+   <!--  We need a way to bootstrap  for now make a new bean and intisialize -->
+   <bean id="issueTracker.uniquePropertyHandler" class="org.alfresco.devcon.util.unique_property.UniquePropertyHandlerImpl">
+      <property name="serviceRegistry">
+         <ref bean="ServiceRegistry"/>
+      </property>
+      <property name="uniquePropertyManager">
+         <ref bean="issueTracker.uniquePropertyManager"/>
+      </property>	
+   </bean>
+   <bean id="issueTracker.uniquePropertyContentPolicyFactory" class="org.alfresco.devcon.util.unique_property.UniquePropertyContentPolicyFactory"  init-method="initialise">
+    	<property name="policyComponent">
+    		<ref bean="policyComponent"/>
+    	</property>
+      <property name="serviceRegistry">
+         <ref bean="ServiceRegistry"/>
+      </property>
+      <property name="uniquePropertyRegistry">
+         <ref bean="issueTracker.uniquePropertyHandler"/>
+      </property>
+      <property name="uniquePropertyHandler">
+         <ref bean="issueTracker.uniquePropertyHandler"/>
+      </property>
+   </bean>
+</beans>
