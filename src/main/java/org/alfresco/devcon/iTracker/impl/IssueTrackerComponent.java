@@ -11,6 +11,8 @@ import org.alfresco.devcon.util.unique_property.UniquePropertyManager;
 import org.alfresco.model.ContentModel;
 import org.alfresco.repo.nodelocator.CompanyHomeNodeLocator;
 import org.alfresco.repo.nodelocator.NodeLocatorService;
+import org.alfresco.repo.security.authentication.AuthenticationUtil;
+import org.alfresco.repo.security.authentication.AuthenticationUtil.RunAsWork;
 import org.alfresco.service.ServiceRegistry;
 import org.alfresco.service.cmr.repository.ContentService;
 import org.alfresco.service.cmr.repository.ContentWriter;
@@ -199,8 +201,16 @@ public class IssueTrackerComponent extends AbstractLifecycleBean {
 
 	@Override
 	protected void onBootstrap(ApplicationEvent event) {
-		// TODO Auto-generated method stub
-		
+		//TODO: we should probably cache this in the component but it is most likely cached within Alfresco
+		//Because of the side effects of the get
+		AuthenticationUtil.runAsSystem(new RunAsWork<NodeRef>() {
+
+			@Override
+			public NodeRef doWork() throws Exception {
+				return getProjectsHome();
+			}
+			
+		});
 	}
 
 	@Override
