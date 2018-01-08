@@ -139,7 +139,7 @@
             <title>Project Information</title>
             <properties>
 	            <property name="itrack:projectId">
-	               <title>Subject</title>
+	               <title>Project Id</title>
 	               <type>d:text</type>
 	               <mandatory>true</mandatory>
 	               <index enabled="true">
