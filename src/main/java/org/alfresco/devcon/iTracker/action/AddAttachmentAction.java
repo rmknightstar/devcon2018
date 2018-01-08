@@ -14,8 +14,11 @@ import org.apache.commons.logging.LogFactory;
 public class AddAttachmentAction extends ActionExecuterAbstractBase {
 	IssueTrackerComponent issueTrackerComponent;
 	private static final Log logger = LogFactory.getLog(CreateCasePolicy.class);
-
 	
+	public void setIssueTrackerComponent(IssueTrackerComponent issueTrackerComponent) {
+		this.issueTrackerComponent = issueTrackerComponent;
+	}
+
 	@Override
 	protected void executeImpl(Action action, NodeRef actionedUponNodeRef) {
 		issueTrackerComponent.makeCaseAttachment(actionedUponNodeRef);

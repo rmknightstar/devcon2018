@@ -20,7 +20,9 @@ public class CreateCasePolicy implements OnCreateNodePolicy {
 		this.policyComponent = policyComponent;
 	}
 
-
+	public void setIssueTrackerComponent(IssueTrackerComponent issueTrackerComponent) {
+		this.issueTrackerComponent = issueTrackerComponent;
+	}
 
 	public void initialise() {
 

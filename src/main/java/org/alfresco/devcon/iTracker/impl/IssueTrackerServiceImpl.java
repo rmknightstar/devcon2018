@@ -9,6 +9,11 @@ import org.alfresco.service.cmr.repository.NodeRef;
 public class IssueTrackerServiceImpl implements IssueTrackerService {
 
 	IssueTrackerComponent issueTrackerComponent;
+
+	public void setIssueTrackerComponent(IssueTrackerComponent issueTrackerComponent) {
+		this.issueTrackerComponent = issueTrackerComponent;
+	}
+
 	@Override
 	public NodeRef createProject(String projectId, String projectName) {
 		return issueTrackerComponent.createProject(projectId, projectName);
