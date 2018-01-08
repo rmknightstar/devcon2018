@@ -49,6 +49,7 @@ public class IssueTrackerComponent extends AbstractLifecycleBean {
 	}
 
 	NodeRef getProjectsHome() {
+		// Get the projects folder and if it is not there, create it (runAsSystem)
 		return folderHierarchyHelper.getFolder(nodeLocatorService.getNode(CompanyHomeNodeLocator.NAME, null, null),PROJECTS_FOLDER,true,true);
 	}
 	
@@ -81,17 +82,24 @@ public class IssueTrackerComponent extends AbstractLifecycleBean {
 	}
 
 	public NodeRef createCase(String projectId, String subject) {
+		//TODO Add current year to the path hierarchy
 		NodeRef caseRef = nodeService.createNode(getProjectsHome(), ContentModel.ASSOC_CONTAINS, QName.createQName(IssueTrackerConstants.ITRACK_MODEL_1_0_URI, GUID.generate()), IssueTrackerConstants.TYPE_CASE).getChildRef();
 		nodeService.setProperty(caseRef, IssueTrackerConstants.PROP_SUBJECT, subject);
 		return caseRef;
 	}
 	
 	private String genName(String prefix) {
+		// Use this to generate unique names (where the name is not important)
 		return prefix + GUID.generate();
 	}
 	
 	private NodeRef createIssueObject(NodeRef caseRef, String subject, QName type,String name) {
-		return nodeService.createNode(caseRef, ContentModel.ASSOC_CONTAINS, QName.createQName(IssueTrackerConstants.ITRACK_MODEL_1_0_URI, name), type).getChildRef();
+		//The child association needs a QName.  In this case I am using the Name space from the content model.
+		NodeRef objRef = nodeService.createNode(caseRef, ContentModel.ASSOC_CONTAINS, QName.createQName(IssueTrackerConstants.ITRACK_MODEL_1_0_URI, name), type).getChildRef();
+
+		// The Name shows up in two places
+		nodeService.setProperty(objRef, ContentModel.PROP_NAME, name);
+		return objRef;
 	}
 	
 	private NodeRef addObjectToCase(NodeRef caseRef, String subject, String content,QName type,String name) {
@@ -129,6 +137,21 @@ public class IssueTrackerComponent extends AbstractLifecycleBean {
 		NodeRef objectRef = addObjectToCase(caseRef,subject,is,IssueTrackerConstants.TYPE_CASE_ATTACHMENT,genName("attachment_"));
 		nodeService.setProperty(objectRef, IssueTrackerConstants.PROP_FILENAME, filename);
 		return objectRef;
+	}
+
+
+	public void  makeCaseAttachment(NodeRef attachmentRef) {
+		// Specialize the Type (the assumption being that this could have been dragged and dropped in as a cm:content type
+		nodeService.setType(attachmentRef, IssueTrackerConstants.TYPE_CASE_ATTACHMENT);
+		
+		//Preserve the original name
+		nodeService.setProperty(attachmentRef, IssueTrackerConstants.PROP_FILENAME, nodeService.getProperty(attachmentRef, ContentModel.PROP_NAME));
+		NodeRef caseRef = nodeService.getPrimaryParent(attachmentRef).getChildRef();
+		
+		//Randomize the actual cm:name and the association name so that there are no conflicts
+		String name=genName("attachment_");
+        nodeService.moveNode(attachmentRef, caseRef, ContentModel.ASSOC_CONTAINS, QName.createQName(IssueTrackerConstants.ITRACK_MODEL_1_0_URI, name));
+        nodeService.setProperty(attachmentRef, ContentModel.PROP_NAME, name);
 	}
 
 
