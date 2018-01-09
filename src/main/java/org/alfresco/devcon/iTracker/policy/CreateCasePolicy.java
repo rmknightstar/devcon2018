@@ -2,6 +2,7 @@ package org.alfresco.devcon.iTracker.policy;
 
 import org.alfresco.devcon.iTracker.IssueTrackerConstants;
 import org.alfresco.devcon.iTracker.impl.IssueTrackerComponent;
+import org.alfresco.repo.node.NodeServicePolicies.OnCreateChildAssociationPolicy;
 import org.alfresco.repo.node.NodeServicePolicies.OnCreateNodePolicy;
 import org.alfresco.repo.policy.Behaviour.NotificationFrequency;
 import org.alfresco.repo.policy.JavaBehaviour;
@@ -10,7 +11,7 @@ import org.alfresco.service.cmr.repository.ChildAssociationRef;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class CreateCasePolicy implements OnCreateNodePolicy {
+public class CreateCasePolicy implements OnCreateNodePolicy, OnCreateChildAssociationPolicy {
 
 	private PolicyComponent policyComponent;
 	IssueTrackerComponent issueTrackerComponent;
@@ -30,6 +31,10 @@ public class CreateCasePolicy implements OnCreateNodePolicy {
 				OnCreateNodePolicy.QNAME,
 				IssueTrackerConstants.TYPE_CASE,
 				new JavaBehaviour(this, OnCreateNodePolicy.QNAME.getLocalName(), NotificationFrequency.TRANSACTION_COMMIT));
+		this.policyComponent.bindAssociationBehaviour(
+				OnCreateChildAssociationPolicy.QNAME,
+				IssueTrackerConstants.TYPE_CASE,
+				new JavaBehaviour(this, OnCreateChildAssociationPolicy.QNAME.getLocalName(), NotificationFrequency.TRANSACTION_COMMIT));
 		logger.debug("INITIALISED");
 	}	
 
@@ -37,6 +42,11 @@ public class CreateCasePolicy implements OnCreateNodePolicy {
 	@Override
 	public void onCreateNode(ChildAssociationRef childAssocRef) {
 		issueTrackerComponent.registerCaseId(childAssocRef.getChildRef());
+	}
+
+	@Override
+	public void onCreateChildAssociation(ChildAssociationRef childAssocRef, boolean isNewNode) {
+		issueTrackerComponent.applyCaseInfo(childAssocRef.getParentRef(),childAssocRef.getChildRef());
 	}
 
 }

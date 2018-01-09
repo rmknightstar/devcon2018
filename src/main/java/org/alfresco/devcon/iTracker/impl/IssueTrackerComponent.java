@@ -87,6 +87,7 @@ public class IssueTrackerComponent extends AbstractLifecycleBean {
 		//TODO Add current year to the path hierarchy
 		NodeRef caseRef = nodeService.createNode(getProjectFolder(projectId), ContentModel.ASSOC_CONTAINS, QName.createQName(IssueTrackerConstants.ITRACK_MODEL_1_0_URI, GUID.generate()), IssueTrackerConstants.TYPE_CASE).getChildRef();
 		nodeService.setProperty(caseRef, IssueTrackerConstants.PROP_SUBJECT, subject);
+		nodeService.setProperty(caseRef, IssueTrackerConstants.PROP_PROJECT_ID, projectId);
 		return caseRef;
 	}
 	
@@ -217,6 +218,11 @@ public class IssueTrackerComponent extends AbstractLifecycleBean {
 	protected void onShutdown(ApplicationEvent event) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public void applyCaseInfo(NodeRef parentRef, NodeRef childRef) {
+		nodeService.setProperty(childRef,IssueTrackerConstants.PROP_CASE_ID,nodeService.getProperty(parentRef,IssueTrackerConstants.PROP_CASE_ID));
+		nodeService.setProperty(childRef,IssueTrackerConstants.PROP_PROJECT_ID,nodeService.getProperty(parentRef,IssueTrackerConstants.PROP_PROJECT_ID));
 	}
 
 }
