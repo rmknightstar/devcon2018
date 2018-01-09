@@ -2,6 +2,7 @@ package org.alfresco.devcon.iTracker.policy;
 
 import org.alfresco.devcon.iTracker.IssueTrackerConstants;
 import org.alfresco.devcon.iTracker.impl.IssueTrackerComponent;
+import org.alfresco.model.ContentModel;
 import org.alfresco.repo.node.NodeServicePolicies.OnCreateChildAssociationPolicy;
 import org.alfresco.repo.node.NodeServicePolicies.OnCreateNodePolicy;
 import org.alfresco.repo.policy.Behaviour.NotificationFrequency;
@@ -34,6 +35,7 @@ public class CreateCasePolicy implements OnCreateNodePolicy, OnCreateChildAssoci
 		this.policyComponent.bindAssociationBehaviour(
 				OnCreateChildAssociationPolicy.QNAME,
 				IssueTrackerConstants.TYPE_CASE,
+				ContentModel.ASSOC_CONTAINS,
 				new JavaBehaviour(this, OnCreateChildAssociationPolicy.QNAME.getLocalName(), NotificationFrequency.TRANSACTION_COMMIT));
 		logger.debug("INITIALISED");
 	}	
