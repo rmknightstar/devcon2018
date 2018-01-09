@@ -40,9 +40,7 @@
 		class="org.alfresco.devcon.iTracker.policy.CreateCasePolicy"
 		init-method="initialise" depends-on="IssueTracker.dictionaryBootstrap">
         <property name="issueTrackerComponent" ref="issueTracker.IssueTrackerComponen" />
-		<property name="policyComponent">
-			<ref bean="policyComponent" />
-		</property>
+		<property name="policyComponent" ref="policyComponent" />
 	</bean>
 
     <!-- These were are from the unreleased consulting utils package -->

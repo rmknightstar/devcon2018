@@ -28,11 +28,11 @@ public class CreateCasePolicy implements OnCreateNodePolicy, OnCreateChildAssoci
 
 	public void initialise() {
 
-		this.policyComponent.bindClassBehaviour(
+		policyComponent.bindClassBehaviour(
 				OnCreateNodePolicy.QNAME,
 				IssueTrackerConstants.TYPE_CASE,
 				new JavaBehaviour(this, OnCreateNodePolicy.QNAME.getLocalName(), NotificationFrequency.TRANSACTION_COMMIT));
-		this.policyComponent.bindAssociationBehaviour(
+		policyComponent.bindAssociationBehaviour(
 				OnCreateChildAssociationPolicy.QNAME,
 				IssueTrackerConstants.TYPE_CASE,
 				ContentModel.ASSOC_CONTAINS,

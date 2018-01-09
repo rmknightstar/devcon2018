@@ -18,6 +18,8 @@ import org.alfresco.service.cmr.repository.ContentService;
 import org.alfresco.service.cmr.repository.ContentWriter;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
+import org.alfresco.service.cmr.rule.Rule;
+import org.alfresco.service.cmr.rule.RuleService;
 import org.alfresco.service.cmr.search.SearchService;
 import org.alfresco.service.namespace.QName;
 import org.alfresco.util.GUID;
@@ -36,13 +38,14 @@ public class IssueTrackerComponent extends AbstractLifecycleBean {
 	SearchService searchService;
 	FolderHierarchyHelper folderHierarchyHelper;
 	UniquePropertyManager uniquePropertyManager;
+	RuleService rulesService;
 	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
 		this.serviceRegistry = serviceRegistry;
 		this.nodeService = this.serviceRegistry.getNodeService();
 		this.nodeLocatorService = this.serviceRegistry.getNodeLocatorService();
 		this.searchService = this.serviceRegistry.getSearchService();
 		this.contentService = this.serviceRegistry.getContentService();
-	
+		this.rulesService = this.serviceRegistry.getRuleService();
 		
 	}
 	
@@ -63,6 +66,17 @@ public class IssueTrackerComponent extends AbstractLifecycleBean {
         this.uniquePropertyManager = uniquePropertyManager;
     }
 
+    public void addRuleToCase(NodeRef caseRef) {
+		/*NodeRef documentLibrary = nodeService.getChildByName(nodeRef, ContentModel.ASSOC_CONTAINS, SiteService.DOCUMENT_LIBRARY);
+		Rule rule = createChangeOwnerActionAndRule(newOwner);
+		rule.setRuleType(RuleType.INBOUND);
+		String siteId = (String) nodeService.getProperty(nodeRef, ContentModel.PROP_NAME);
+		Map<QName,Serializable> props = new HashMap<QName,Serializable>();
+		props.put(ChangeOwnerConstants.PROP_SITE_ID, siteId);
+		ruleService.saveRule(documentLibrary, rule);
+		// Rule only has a nodeRef after it is saved
+		nodeService.addAspect(rule.getNodeRef(), ChangeOwnerConstants.ASPECT_CHANGE_OWNER_RULE, props);	*/
+    }
 
 	public void registerCaseId(NodeRef caseRef) {
 	        long id=uniquePropertyManager.getNextGlobalSequenceId(IssueTrackerConstants.PROP_CASE_ID);
@@ -149,7 +163,7 @@ public class IssueTrackerComponent extends AbstractLifecycleBean {
 		
 		//Preserve the original name
 		nodeService.setProperty(attachmentRef, IssueTrackerConstants.PROP_FILENAME, nodeService.getProperty(attachmentRef, ContentModel.PROP_NAME));
-		NodeRef caseRef = nodeService.getPrimaryParent(attachmentRef).getChildRef();
+		NodeRef caseRef = nodeService.getPrimaryParent(attachmentRef).getParentRef();
 		
 		//Randomize the actual cm:name and the association name so that there are no conflicts
 		String name=genName("attachment_");
