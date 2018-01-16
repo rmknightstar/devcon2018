@@ -1,1 +1,1 @@
-Message: '${fromJS}' '${fromJava}'
+{ "id": "${id}" }

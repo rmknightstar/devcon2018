@@ -15,10 +15,10 @@
           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
     <bean id="issueTracker.IssueTrackerService" class="org.alfresco.devcon.iTracker.impl.IssueTrackerServiceImpl">
-        <property name="issueTrackerComponent" ref="issueTracker.IssueTrackerComponen" />
+        <property name="issueTrackerComponent" ref="issueTracker.IssueTrackerComponent" />
     </bean>
 
-    <bean id="issueTracker.IssueTrackerComponen" class="org.alfresco.devcon.iTracker.impl.IssueTrackerComponent">
+    <bean id="issueTracker.IssueTrackerComponent" class="org.alfresco.devcon.iTracker.impl.IssueTrackerComponent">
         <property name="folderHierarchyHelper" ref="issueTrackerUtils.folderHierarchyHelper" />
         <property name="uniquePropertyManager" ref="issueTrackerUtils.uniquePropertyManager" />
         <property name="serviceRegistry" ref="ServiceRegistry" />
@@ -32,13 +32,13 @@
     </bean>
 
     <bean id="itracker-add-attachment" class="org.alfresco.devcon.iTracker.action.AddAttachmentAction"  parent="action-executer">
-        <property name="issueTrackerComponent" ref="issueTracker.IssueTrackerComponen" />
+        <property name="issueTrackerComponent" ref="issueTracker.IssueTrackerComponent" />
     </bean>
 
 	<bean id="issueTracker.CreateCasePolicy"
 		class="org.alfresco.devcon.iTracker.policy.CreateCasePolicy"
 		init-method="initialise" depends-on="IssueTracker.dictionaryBootstrap">
-        <property name="issueTrackerComponent" ref="issueTracker.IssueTrackerComponen" />
+        <property name="issueTrackerComponent" ref="issueTracker.IssueTrackerComponent" />
 		<property name="policyComponent" ref="policyComponent" />
 	</bean>
 

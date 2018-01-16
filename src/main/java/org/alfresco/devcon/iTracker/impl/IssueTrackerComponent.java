@@ -64,7 +64,7 @@ public class IssueTrackerComponent extends AbstractLifecycleBean {
 		this.folderHierarchyHelper = folderHierarchyHelper;
 	}
 	
-	void setProjectsHome(String projectsHome) {
+	public void setProjectsHome(String projectsHome) {
 		if (projectsHome.startsWith("/")) {
 			projectsHome = projectsHome.substring(1);
 		}
