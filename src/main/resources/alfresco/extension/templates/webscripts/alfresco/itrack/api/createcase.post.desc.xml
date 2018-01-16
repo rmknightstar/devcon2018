@@ -1,0 +1,8 @@
+<webscript>
+    <shortname>Create Case</shortname>
+    <description>Create Case</description>
+    <url>/itrack/api/createcase</url>
+    <authentication>user</authentication>
+    <format default="json"></format>
+    <family>itrack</family>    
+</webscript>

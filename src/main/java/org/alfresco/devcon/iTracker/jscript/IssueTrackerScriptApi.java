@@ -38,52 +38,41 @@ public class IssueTrackerScriptApi extends BaseScopableProcessorExtension {
 		return toScriptNode(issueTrackerService.addCommentToCase(caseRef.getNodeRef(), subject, comment));
 	}
 
-	public NodeRef addCommentToCase(NodeRef caseRef, String subject, InputStream is) {
+	public ScriptNode linkReferenceToCase(ScriptNode caseRef, String subject, String url) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public NodeRef addCommentToCase(NodeRef caseRef, String subject, Reader rdr) {
+	public ScriptNode addCommentToCase(String caseId, String subject, String comment) {
+		return toScriptNode(issueTrackerService.addCommentToCase(issueTrackerService.getCaseFromId(caseId), subject, comment));
+	}
+
+	public ScriptNode linkReferenceToCase(String caseId, String subject, String url) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public NodeRef addAttachmentToCase(NodeRef caseRef, String subject, InputStream is) {
+	public String getCaseStatus(ScriptNode caseRef) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public NodeRef addAttachmentToCase(NodeRef caseRef, String subject, Reader rdr) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public NodeRef linkReferenceToCase(NodeRef caseRef, String subject, String url) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getCaseStatus(NodeRef caseRef) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void suspendCase(NodeRef caseRef) {
+	public void suspendCase(ScriptNode caseRef) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void activateCase(NodeRef caseRef) {
+	public void activateCase(ScriptNode caseRef) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void closeCase(NodeRef caseRef) {
+	public void closeCase(ScriptNode caseRef) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void reOpenCase(NodeRef caseRef) {
+	public void reOpenCase(ScriptNode caseRef) {
 		// TODO Auto-generated method stub
 
 	}

@@ -20,5 +20,5 @@ public interface IssueTrackerService {
 	void activateCase(NodeRef caseRef);
 	void closeCase(NodeRef caseRef);
 	void reOpenCase(NodeRef caseRef);
-	
+	NodeRef getCaseFromId(String caseId);
 }

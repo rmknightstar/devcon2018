@@ -22,12 +22,11 @@
         <property name="folderHierarchyHelper" ref="issueTrackerUtils.folderHierarchyHelper" />
         <property name="uniquePropertyManager" ref="issueTrackerUtils.uniquePropertyManager" />
         <property name="serviceRegistry" ref="ServiceRegistry" />
+        <property name="projectsHome" value="${projects.home.path}" />
     </bean>
 
     <bean id="issueTracker.IssueTrackerScriptApi" parent="baseJavaScriptExtension" class="org.alfresco.devcon.iTracker.jscript.IssueTrackerScriptApi">
-        <property name="extensionName">
-            <value>issueTracker</value>
-        </property>
+        <property name="extensionName" value="issueTracker" />
         <property name="issueTrackerService" ref="issueTracker.IssueTrackerService" />
         <property name="serviceRegistry" ref="ServiceRegistry" />
     </bean>

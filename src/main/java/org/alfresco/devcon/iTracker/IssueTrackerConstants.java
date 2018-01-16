@@ -13,10 +13,9 @@ public interface IssueTrackerConstants {
 	public static final QName TYPE_CASE_ATTACHMENT = QName.createQName(ITRACK_MODEL_1_0_URI, "caseAttachment");
 	public static final QName TYPE_CASE_REFERENCE = QName.createQName(ITRACK_MODEL_1_0_URI, "caseReference");
 
-	public static final QName ASPECT_CONTRACT_INFO = QName.createQName(ITRACK_MODEL_1_0_URI, "contractInfo");
-	public static final QName ASPECT_VENDOR = QName.createQName(ITRACK_MODEL_1_0_URI, "vendor");
-	public static final QName ASPECT_INVOICE_APPROVED = QName.createQName(ITRACK_MODEL_1_0_URI, "invoiceApproved");
-	public static final QName ASPECT_INVOICE_REJECTED = QName.createQName(ITRACK_MODEL_1_0_URI, "invoiceRejected");
+	public static final QName ASPECT_CASE_OBJECT = QName.createQName(ITRACK_MODEL_1_0_URI, "caseObject");
+	public static final QName ASPECT_PROJECT_INFO = QName.createQName(ITRACK_MODEL_1_0_URI, "projectInfo");
+	public static final QName ASPECT_CASE_INFO = QName.createQName(ITRACK_MODEL_1_0_URI, "caseInfo");
 	
 
 	public static final QName PROP_LINK_URL = QName.createQName(ITRACK_MODEL_1_0_URI, "linkUrl");

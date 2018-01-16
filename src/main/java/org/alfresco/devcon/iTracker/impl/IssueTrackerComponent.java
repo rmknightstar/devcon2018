@@ -3,9 +3,11 @@ package org.alfresco.devcon.iTracker.impl;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Arrays;
+import java.util.List;
 
 import org.alfresco.devcon.iTracker.IssueTrackerConstants;
 import org.alfresco.devcon.iTracker.IssueTrackerService.CaseStatus;
+import org.alfresco.devcon.iTracker.policy.CreateCasePolicy;
 import org.alfresco.devcon.util.folder_hierarchy.FolderHierarchyHelper;
 import org.alfresco.devcon.util.unique_property.UniquePropertyManager;
 import org.alfresco.model.ContentModel;
@@ -18,12 +20,18 @@ import org.alfresco.service.cmr.repository.ContentService;
 import org.alfresco.service.cmr.repository.ContentWriter;
 import org.alfresco.service.cmr.repository.NodeRef;
 import org.alfresco.service.cmr.repository.NodeService;
+import org.alfresco.service.cmr.repository.StoreRef;
 import org.alfresco.service.cmr.rule.Rule;
 import org.alfresco.service.cmr.rule.RuleService;
+import org.alfresco.service.cmr.search.QueryConsistency;
+import org.alfresco.service.cmr.search.ResultSet;
+import org.alfresco.service.cmr.search.SearchParameters;
 import org.alfresco.service.cmr.search.SearchService;
 import org.alfresco.service.namespace.QName;
 import org.alfresco.util.GUID;
 import org.apache.commons.io.input.ReaderInputStream;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.extensions.surf.util.AbstractLifecycleBean;
 
@@ -39,6 +47,9 @@ public class IssueTrackerComponent extends AbstractLifecycleBean {
 	FolderHierarchyHelper folderHierarchyHelper;
 	UniquePropertyManager uniquePropertyManager;
 	RuleService rulesService;
+	List<String> projectsHome;
+	private static final Log logger = LogFactory.getLog(IssueTrackerComponent.class);
+
 	public void setServiceRegistry(ServiceRegistry serviceRegistry) {
 		this.serviceRegistry = serviceRegistry;
 		this.nodeService = this.serviceRegistry.getNodeService();
@@ -52,10 +63,17 @@ public class IssueTrackerComponent extends AbstractLifecycleBean {
 	public void setFolderHierarchyHelper(FolderHierarchyHelper folderHierarchyHelper) {
 		this.folderHierarchyHelper = folderHierarchyHelper;
 	}
+	
+	void setProjectsHome(String projectsHome) {
+		if (projectsHome.startsWith("/")) {
+			projectsHome = projectsHome.substring(1);
+		}
+		this.projectsHome = Arrays.asList(projectsHome.split("/"));
+	}
 
 	NodeRef getProjectsHome() {
 		// Get the projects folder and if it is not there, create it (runAsSystem)
-		return folderHierarchyHelper.getFolder(nodeLocatorService.getNode(CompanyHomeNodeLocator.NAME, null, null),PROJECTS_FOLDER,true,true);
+		return folderHierarchyHelper.getFolder(nodeLocatorService.getNode(CompanyHomeNodeLocator.NAME, null, null),this.projectsHome,true);
 	}
 	
 	NodeRef getProjectFolder(String projectId) {
@@ -64,6 +82,26 @@ public class IssueTrackerComponent extends AbstractLifecycleBean {
 	
     public void setUniquePropertyManager(UniquePropertyManager uniquePropertyManager) {
         this.uniquePropertyManager = uniquePropertyManager;
+    }
+    
+	private String getByCaseIdSearchQuery(String caseId) {
+		return String.format("=%s:'%s' AND TYPE:'%s'", IssueTrackerConstants.PROP_CASE_ID,caseId,IssueTrackerConstants.TYPE_CASE);
+	}
+
+    public NodeRef getCaseById(String caseId) {
+		SearchParameters sp = new SearchParameters();
+		sp.addStore(StoreRef.STORE_REF_WORKSPACE_SPACESSTORE);
+		sp.setQueryConsistency(QueryConsistency.TRANSACTIONAL);
+		sp.setQuery(getByCaseIdSearchQuery(caseId));
+		sp.setLanguage(SearchService.LANGUAGE_FTS_ALFRESCO);
+		ResultSet rs = searchService.query(sp);
+		logger.debug("QUERY: "+sp.getQuery());
+		if (rs.length() < 1) {
+			return null;
+		}
+		logger.debug("NODEREF: "+rs.getNodeRef(0));
+		return rs.getNodeRef(0);   	
+    	
     }
 
     public void addRuleToCase(NodeRef caseRef) {

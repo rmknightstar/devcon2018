@@ -94,4 +94,9 @@ public class IssueTrackerServiceImpl implements IssueTrackerService {
 
 	}
 
+	@Override
+	public NodeRef getCaseFromId(String caseId) {
+		return issueTrackerComponent.getCaseById(caseId);
+	}
+
 }

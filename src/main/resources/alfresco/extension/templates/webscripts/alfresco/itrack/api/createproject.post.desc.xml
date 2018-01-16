@@ -1,0 +1,8 @@
+<webscript>
+    <shortname>Create Project</shortname>
+    <description>Create Project</description>
+    <url>/itrack/api/createproject</url>
+    <authentication>user</authentication>
+    <format default="json"></format>
+    <family>itrack</family>    
+</webscript>

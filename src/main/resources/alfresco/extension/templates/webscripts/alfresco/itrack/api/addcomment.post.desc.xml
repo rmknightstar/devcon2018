@@ -1,0 +1,8 @@
+<webscript>
+    <shortname>Add Comment</shortname>
+    <description>Adds a comment to a case</description>
+    <url>/itrack/api/addcomment</url>
+    <authentication>user</authentication>
+    <format default="json"></format>
+    <family>itrack</family>    
+</webscript>
